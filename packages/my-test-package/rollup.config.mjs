@@ -1,7 +1,7 @@
-
 import pkg from './package.json' assert { type: 'json' };
 import typescript from '@rollup/plugin-typescript';
 import copy from 'rollup-plugin-copy';
+import del from 'rollup-plugin-delete';
 import dts from 'rollup-plugin-dts';
 import external from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
@@ -54,7 +54,13 @@ export default [
     plugins: [
       copy({
         hook: 'buildStart',
-        targets: [{ dest: './', rename: 'styles.css', src: 'dist/index.css' }],
+        targets: [
+          { dest: './dist', rename: 'styles.css', src: 'dist/index.css' },
+        ],
+      }),
+      del({
+        hook: 'buildEnd',
+        targets: ['dist/index.css', 'dist/index.esm.css', 'dist/types'],
       }),
       dts(),
     ],
